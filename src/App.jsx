@@ -1,108 +1,172 @@
+// import { useState } from "react";
+//
+// function App() {
+//     const [userChoice, setUserChoice] = useState("");
+//     const [computerChoice, setComputerChoice] = useState("");
+//     const [result, setResult] = useState("");
+//     const [win, setWin] = useState(0);
+//     const [lose, setLose] = useState(0);
+//     const [draw, setDraw] = useState(0);
+//
+//     const play = user => {
+//         const choices = ["가위", "바위", "보"];
+//         const computer = choices[Math.floor(Math.random() * 3)];
+//
+//         setUserChoice(user);
+//         setComputerChoice(computer);
+//
+//         if (user === computer) {
+//             setResult("무승부");
+//             setDraw(prev => prev + 1);
+//         } else if (
+//             (user === "가위" && computer === "보") ||
+//             (user === "바위" && computer === "가위") ||
+//             (user === "보" && computer === "바위")
+//         ) {
+//             setResult("승리");
+//             setWin(prev => prev + 1);
+//         } else {
+//             setResult("패배");
+//             setLose(prev => prev + 1);
+//         }
+//     };
+//
+//     const resetGame = () => {
+//         setUserChoice("");
+//         setComputerChoice("");
+//         setResult("");
+//         setWin(0);
+//         setLose(0);
+//         setDraw(0);
+//     };
+//
+//
+//     return (
+//         <div>
+//             <h1>가위바위보 게임</h1>
+//
+//             <button onClick={() => play("가위")}>
+//                 가위
+//             </button>
+//             <button onClick={() => play("바위")}>
+//                 바위
+//             </button>
+//             <button onClick={() => play("보")}>
+//                 보
+//             </button>
+//
+//             <hr />
+//
+//             <h2>내 선택 : {userChoice}</h2>
+//             <h2>컴퓨터 선택 : {computerChoice}</h2>
+//
+//             <h2
+//                 style={{
+//                     color:
+//                         result === "승리"
+//                             ? "green"
+//                             : result === "패배"
+//                                 ? "red"
+//                                 : result === "무승부"
+//                                     ? "gray"
+//                                     : "black",
+//                     fontSize: "24px",
+//                     fontWeight: "bold",
+//                 }}>
+//                 결과 : {result}
+//             </h2>
+//
+//             <button onClick={resetGame}>게임 다시하기</button>
+//
+//             <hr />
+//
+//             <h2>승 : {win}</h2>
+//             <h2>패 : {lose}</h2>
+//             <h2>무 : {draw}</h2>
+//             <h2>총 게임 수 : {win + lose + draw}</h2>
+//         </div>
+//     );
+// }
+//
+// export default App;
+
 import { useState } from "react";
 
 function App() {
-    const [name, setName] = useState(""); // input 관리용 state
-    const [cart, setCart] = useState([]);
+    const [userChoice, setUserChoice] = useState("");
+    const [computerChoice, setComputerChoice] = useState("");
+    const [result, setResult] = useState("");
+    const [win, setWin] = useState(0);
+    const [lose, setLose] = useState(0);
+    const [draw, setDraw] = useState(0);
 
-    const onAdd = e => {
-        e.preventDefault();
+    const play = user => {
+        const choices = ["가위", "바위", "보"];
+        const computer = choices[Math.floor(Math.random() * 3)];
+        setUserChoice(user);
+        setComputerChoice(computer);
 
-        if (name === "") return;
-
-        setCart([...cart, { name: name, quantity: 1 }]);
-        setName("");
-    }
-
-    const onChange = e => {
-        setName(e.target.value);
-    }
-
-    const onUpdateCount = (index, number) => {
-        // 1가지 기능을 하는 함수를 만드는건데,
-        // '1을 더하는' 함수가 아니라, '수량을 변경하는' 함수를 만든 것
-        // 얼마를 바꿀 것인가는 함수를 실행할 때 매개변수를 통해 제어함
-
-        // 계산은 위에서
-        const newCart = [...cart];
-        const nextCount = newCart[index].quantity + number;
-        if (nextCount > 0) {
-            // 저장은 if문 안에서
-            newCart[index].quantity = nextCount;
-            setCart(newCart);
+        if (user === computer) {
+            setResult("무승부");
+            setDraw(prev => prev + 1);
+        } else if (
+            (user === "가위" && computer === "보") ||
+            (user === "바위" && computer === "가위") ||
+            (user === "보" && computer === "바위")
+        ) {
+            setResult("승리");
+            setWin(prev => prev + 1);
+        } else {
+            setResult("패배");
+            setLose(prev => prev + 1);
         }
-    }
+    };
+
+    const resetGame = () => {
+        setUserChoice("");
+        setComputerChoice("");
+        setResult("");
+        setWin(0);
+        setLose(0);
+        setDraw(0);
+    };
 
     return (
         <div>
-            <h2>🛒 Simple Shop</h2>
-            <fieldset>
-                <legend>상품 추가</legend>
-                <form
-                    onSubmit={onAdd}>
-                    <input
-                        placeholder={"상품명을 입력하세요"}
-                        onChange={onChange}
-                        value={name}
-                    />
-                    <button type={"submit"}>카트에 담기</button>
-                </form>
-            </fieldset>
-            <br />
-            {/*
-                react에서 inline 형식으로 스타일을 적용하는 방법은
-                style={} 속성을 동일하게 이용함.
-                단! 이 안에 들어가는 값은 "객체"로 작성함
-                css : background-color => backgroundColor (객체안에서 키값은 띄어쓰기도 안되고 -도 쓸수 없기 때문에..)
-            */}
-            <table border={1} cellPadding={10} cellSpacing={0} style={{ width: "100%" }}>
-                <thead>
-                    <tr style={{ backgroundColor: "#f2f2f2" }}>
-                        <th>상품명</th>
-                        <th>수량 제어</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {cart.map((value, index) => {
-                        return (
-                            <tr key={index}>
-                                <td>{value.name}</td>
-                                <td>
-                                    <button
-                                        onClick={() => onUpdateCount(index, -1)}>
-                                        -
-                                    </button>
-                                    {value.quantity}
-                                    <button
-                                        onClick={() => onUpdateCount(index, +1)}>
-                                        +
-                                    </button>
-                                </td>
-                                <td>
-                                    <button
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => {
-                                            setCart(
-                                                cart.filter((v, i) => {
-                                                    return i !== index;
-                                                }),
-                                            );
-                                        }}>
-                                        삭제
-                                    </button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-            <h3>
-                총 품목 : {cart.length}개 / 총 수량 :{" "}
-                {cart.reduce((acc, item) => {
-                    return acc + item.quantity;
-                }, 0)}
-                개
-            </h3>
+            <div>
+                <h2>가위바위보 게임</h2>
+                <button onClick={() => play("가위")}>가위</button>
+                <button onClick={() => play("바위")}>바위</button>
+                <button onClick={() => play("보")}>보</button>
+
+                <hr />
+
+                <h3>내선택 : {userChoice}</h3>
+                <h3>컴퓨터 선택 : {computerChoice}</h3>
+                <h3
+                    style={{
+                        color:
+                            result === "승리"
+                                ? "green"
+                                : result === "패배"
+                                  ? "red"
+                                  : result === "무승부"
+                                    ? "gray"
+                                    : "black",
+                        fontSize: "24px",
+                        fontWeight: "bold"
+                    }}>
+                    결과 : {result}
+                </h3>
+                <button onClick={resetGame}>게임 다시하기</button>
+
+                <hr />
+
+                <h3>승 : {win}</h3>
+                <h3>패 : {lose}</h3>
+                <h3>무 : {draw}</h3>
+                <h3>총 게임수 : {win + lose + draw}</h3>
+            </div>
         </div>
     );
 }

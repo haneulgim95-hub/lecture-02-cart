@@ -39,6 +39,20 @@ function App() {
     }
 
     const currentQuiz = quizData[currentIndex];
+    const selectAnswer = (option) => {
+        if (option === currentQuiz.answer) {
+            setResult("정답입니다!");
+            setScore(prev => prev + 1);
+        } else {
+            setResult("오답입니다!");
+        }
+    }
+
+    const nextQuestion = () => {
+        setCurrentIndex(prev => prev + 1);
+        setResult("");
+    }
+
 
     return (
         <div>
@@ -50,14 +64,7 @@ function App() {
                         <li key={index} style={{listStyle: "none"}}>
                             <button
                                 disabled={result !== ""}
-                                onClick={() => {
-                                    if (option === currentQuiz.answer) {
-                                        setResult("정답입니다!");
-                                        setScore(prev => prev + 1);
-                                    } else {
-                                        setResult("오답입니다!");
-                                    }
-                                }}>
+                                onClick={() => selectAnswer(option)}>
                                 {option}
                             </button>
                         </li>
@@ -71,10 +78,7 @@ function App() {
             <br />
             {result !== "" && (
                 <button
-                    onClick={() => {
-                        setCurrentIndex(prev => prev + 1);
-                        setResult("");
-                    }}>
+                    onClick={nextQuestion}>
                     다음 문제
                 </button>
             )}

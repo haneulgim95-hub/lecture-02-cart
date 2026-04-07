@@ -9,13 +9,22 @@ function App() {
 
         if (name === "") return;
 
-        setCart([...cart, { name: name, quantity: 1 }]);
+        // 중복된 상품명이 들어올 경우, 재등록을 막고 기존 상품에 +1만 해주는 기능
+        // 1. 중복된 상품이 있는지 검사 => find + 나중에 quantity도 수정 => index를 알아야 함 => findIndex()
+        const existIndex = cart.findIndex((value) => { return value.name === name});
+        // existIndex => 값이 없으면 -1, 값이 있으면  0, 1, 2, 3, .....
+        if (existIndex > -1) {
+            // 장바구니에 이미 있다(중복된 상품이 있다) => 새로운 상품을 추가할게 아니라, 이미 기존에 있는 아이템에 +1
+            onUpdateCount(existIndex, 1);
+        } else {
+            setCart([...cart, { name: name, quantity: 1 }]);
+        }
         setName("");
-    }
+    };
 
     const onChange = e => {
         setName(e.target.value);
-    }
+    };
 
     const onUpdateCount = (index, number) => {
         // 1가지 기능을 하는 함수를 만드는건데,
@@ -30,20 +39,19 @@ function App() {
             newCart[index].quantity = nextCount;
             setCart(newCart);
         }
-    }
+    };
+
+    const totalCount = cart.reduce((acc, value) => {
+        return acc + value.quantity;
+    }, 0);
 
     return (
         <div>
             <h2>🛒 Simple Shop</h2>
             <fieldset>
                 <legend>상품 추가</legend>
-                <form
-                    onSubmit={onAdd}>
-                    <input
-                        placeholder={"상품명을 입력하세요"}
-                        onChange={onChange}
-                        value={name}
-                    />
+                <form onSubmit={onAdd}>
+                    <input placeholder={"상품명을 입력하세요"} onChange={onChange} value={name} />
                     <button type={"submit"}>카트에 담기</button>
                 </form>
             </fieldset>
@@ -63,20 +71,21 @@ function App() {
                     </tr>
                 </thead>
                 <tbody>
+                    {cart.length === 0 && (
+                        <tr>
+                            <td colSpan={3} style={{ textAlign: "center", height: "100px" }}>
+                                카트가 비었습니다
+                            </td>
+                        </tr>
+                    )}
                     {cart.map((value, index) => {
                         return (
                             <tr key={index}>
                                 <td>{value.name}</td>
                                 <td>
-                                    <button
-                                        onClick={() => onUpdateCount(index, -1)}>
-                                        -
-                                    </button>
+                                    <button onClick={() => onUpdateCount(index, -1)}>-</button>
                                     {value.quantity}
-                                    <button
-                                        onClick={() => onUpdateCount(index, +1)}>
-                                        +
-                                    </button>
+                                    <button onClick={() => onUpdateCount(index, +1)}>+</button>
                                 </td>
                                 <td>
                                     <button
@@ -97,11 +106,7 @@ function App() {
                 </tbody>
             </table>
             <h3>
-                총 품목 : {cart.length}개 / 총 수량 :{" "}
-                {cart.reduce((acc, item) => {
-                    return acc + item.quantity;
-                }, 0)}
-                개
+                총 품목 : {cart.length}개 / 총 수량 : {totalCount}개
             </h3>
         </div>
     );

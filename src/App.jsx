@@ -4,6 +4,7 @@ function App() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [result, setResult] = useState("");
     const [score, setScore] = useState(0);
+
     const quizData = [
         {
             question: "React를 만든 회사는?",
@@ -22,16 +23,18 @@ function App() {
         },
     ];
 
+    const reset = () => {
+        setCurrentIndex(0);
+        setResult("");
+        setScore(0);
+    };
+
     if (currentIndex >= quizData.length) {
         return (
             <div>
                 <h1>퀴즈 종료!</h1>
                 <h2>점수 : {score} / {quizData.length}</h2>
-                <button onClick={() => {
-                    setCurrentIndex(0);
-                    setResult("");
-                    setScore(0);
-                }}>
+                <button onClick={reset}>
                     다시 시작
                 </button>
             </div>
@@ -39,42 +42,44 @@ function App() {
     }
 
     const currentQuiz = quizData[currentIndex];
-    const selectAnswer = (option) => {
-        if (option === currentQuiz.answer) {
-            setResult("정답입니다!");
+
+    const selectAnswer = (value) => {
+        if (value === currentQuiz.answer) {
+            setResult("정답입니다.");
             setScore(prev => prev + 1);
         } else {
-            setResult("오답입니다!");
+            setResult("오답입니다.");
         }
     }
 
     const nextQuestion = () => {
         setCurrentIndex(prev => prev + 1);
         setResult("");
-    }
+    };
+
 
 
     return (
         <div>
-            <h3>문제 {currentIndex + 1} / {quizData.length}</h3>
+            <h3>
+                문제 {currentIndex + 1} / {quizData.length}
+            </h3>
             <h1>{currentQuiz.question}</h1>
-            <ul style={{ display: "inline-flex", flexDirection: "column", gap: "10px" }}>
-                {currentQuiz.options.map((option, index) => {
+            <ul style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {currentQuiz.options.map((value, index) => {
                     return (
-                        <li key={index} style={{listStyle: "none"}}>
+                        <li key={index} style={{ listStyle: "none" }}>
                             <button
                                 disabled={result !== ""}
-                                onClick={() => selectAnswer(option)}>
-                                {option}
+                                onClick={() => selectAnswer(value)}>
+                                {value}
                             </button>
                         </li>
                     );
                 })}
             </ul>
-
             <br />
             <h2>{result}</h2>
-
             <br />
             {result !== "" && (
                 <button
